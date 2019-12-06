@@ -38,21 +38,30 @@ class Board extends React.Component {
 class Game extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             history: [{
-                squares: Array(9).fill(null)
+                squares: Array(9).fill(null),
+                row: null,
+                col: null
             }],
+            orderAsc: true,
             stepNumber: 0,
             xIsNext: true
-        }
+        };
+
+        this.toggleHistory = this.toggleHistory.bind(this);
     }
 
     render() {
-        const history = this.state.history;
-        const current = history[this.state.stepNumber];
+        const {history, orderAsc, stepNumber} = this.state;
+        const current = history[stepNumber];
         const winner = calculateWinner(current.squares);
 
-        const moves = history.map((step, move) => {
+        const chronicle = orderAsc ? history.slice() : history.slice().reverse();
+
+        const moves = chronicle.map((step, index) => {
+            const move = orderAsc ? index : chronicle.length - index - 1;
             const desc = (move
                 ? 'Go to move #' + move + ' (' + step.col + ',' + step.row  + ')'
                 : 'Go to game start'
@@ -85,10 +94,19 @@ class Game extends React.Component {
                 <div className="game-info">
                     <div>{status}</div>
                     <ol>{moves}</ol>
+                    <div>
+                        <button onClick={this.toggleHistory}>{orderAsc ? "Asc" : "Dsc"}</button>
+                    </div>
                 </div>
             </div>
         );
     }
+
+    toggleHistory() {
+        this.setState({
+            orderAsc: !this.state.orderAsc,
+        })
+    };
 
     handleClick(i) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
