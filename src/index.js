@@ -53,8 +53,6 @@ class Game extends React.Component {
             stepNumber: 0,
             xIsNext: true
         };
-
-        this.toggleHistory = this.toggleHistory.bind(this);
     }
 
     render() {
@@ -113,10 +111,10 @@ class Game extends React.Component {
         );
     }
 
-    toggleHistory() {
-        this.setState({
-            orderAsc: !this.state.orderAsc,
-        })
+    toggleHistory = () => {
+        this.setState(state => ({
+            orderAsc: !state.orderAsc,
+        }))
     };
 
     handleClick(i) {
@@ -128,7 +126,7 @@ class Game extends React.Component {
             return;
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
-        this.setState({
+        this.setState(state => ({
             history: [
                 ...history,
                 {
@@ -137,8 +135,8 @@ class Game extends React.Component {
                     col: Math.trunc(i / 3)
                 }],
             stepNumber: history.length,
-            xIsNext: !this.state.xIsNext
-        });
+            xIsNext: !state.xIsNext
+        }));
     }
 
     jumpTo(step) {
